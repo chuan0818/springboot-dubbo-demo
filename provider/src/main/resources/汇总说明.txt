@@ -1,0 +1,28 @@
+##################已成功拦截dubbo请求###########################################
+1.Dubbo拦截器实现的原理，我的理解就是实现或扩展Dubbo自己的Filter接口（LogFilter implements Filter），
+    public class ProviderDubboFilter implements Filter
+2.然后将这个类在配置文件（META-INF/dubbo/com.alibaba.dubbo.rpc.Filter文本文件）中与一个名称对应（logFilter），
+    META-INF/dubbo/com.alibaba.dubbo.rpc.Filter
+    providerDubboFilter=com.imooc.springboot.dubbo.demo.provider.filter.ProviderDubboFilter
+    PS:providerDubboFilter这个key需要在dubbo配置文件中配置
+3.然后在dubbo配置文件中对需要增加拦截器的bean进行配置
+    consumer:
+      check: false  #dubbo服务消费启动时不用check(即要求有提供者才能正确启动)  如此才能设置dubbo服务既是dubbo提供者也能是dubbo消费者
+      timeout: 60000
+      filter: consumerDubboFilter  #配置dubbo filter(拦截dubbo消费者),必须和com.alibaba.dubbo.rpc.Filter文件中的值项的key保持一致
+    provider:
+      filter: providerDubboFilter  #配置dubbo filter(拦截dubbo服务提供者),必须和com.alibaba.dubbo.rpc.Filter文件中的值项的key保持一致
+#####################dubbo请求过程################################################
+    消费者发起dubbo请求流程:(拦截消费者发起dubbo请求start->拦截请求到的服务者start->执行真正的dubbo服务逻辑->拦截请求到的服务者end->拦截消费者发起dubbo请求end)
+    可以拦截dubbo客户端也可以拦截dubbo服务端
+    ConsumerDubboFilter拦截invoke...start
+    not match type String/Number/Object(处理最外层值为null的参数为null):null
+    not match type String/Number/Object(处理最外层值为null的参数为null):null
+    invoke com.imooc.springboot.dubbo.demo.provider.service.Demo01Service.doSomeThing(null,{"addressList":["addr1","addr2","addr3"],"sex":1,"name":"xxx","class":"com.imooc.springboot.dubbo.demo.provider.dto.PersonDto","age":27},{"birthday":1608651924023,"str":"strDemo","longNum":1000,"xxxList":["xxx01","xxx02"],"num":10,"class":"com.imooc.springboot.dubbo.demo.provider.dto.OtherDto"},10,818.0704,null)
+    ProviderDubboFilter拦截invoke...start
+    not match type String/Number/Object(处理最外层值为null的参数为null):null
+    not match type String/Number/Object(处理最外层值为null的参数为null):null
+    invoke com.imooc.springboot.dubbo.demo.provider.service.Demo01Service.doSomeThing(null,{"addressList":["addr1","addr2","addr3"],"sex":1,"name":"xxx","class":"com.imooc.springboot.dubbo.demo.provider.dto.PersonDto","age":27},{"birthday":1608651924023,"str":"strDemo","longNum":1000,"xxxList":["xxx01","xxx02"],"num":10,"class":"com.imooc.springboot.dubbo.demo.provider.dto.OtherDto"},10,818.0704,null)
+    最外层接收到的时间参数:null
+    ProviderDubboFilter拦截invoke...end
+    ConsumerDubboFilter拦截invoke...end

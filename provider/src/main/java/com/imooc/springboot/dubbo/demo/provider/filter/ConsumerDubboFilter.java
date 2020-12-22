@@ -1,14 +1,11 @@
 package com.imooc.springboot.dubbo.demo.provider.filter;
 
 import com.alibaba.dubbo.rpc.*;
-import com.alibaba.dubbo.rpc.service.GenericService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 拦截打印dubbo请求参数
@@ -23,10 +20,10 @@ import java.util.List;
  * PS:外层null值参数会处理成null,json对象中值为null字段会被dubbo序列化时自动剔除
  */
 @Slf4j
-public class ProviderDubboFilter implements Filter {
+public class ConsumerDubboFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        log.info("ProviderDubboFilter拦截invoke...start");
+        log.info("ConsumerDubboFilter拦截invoke...start");
         buildInvokeStatement(invoker, invocation);
         //log.info("InterfaceName={},MethodName={},Parameter={}", invocation.getInvoker().getInterface().getName(), invocation.getMethodName(), invocation.getArguments());
         //开始时间
@@ -42,7 +39,7 @@ public class ProviderDubboFilter implements Filter {
         //    log.info("InterfaceName={},MethodName={},Resposne={},SpendTime={} ms", invocation.getInvoker().getInterface().getName(), invocation.getMethodName(), JSON.toJSONString(new Object[]{result.getValue()}), elapsed);
         //}
         //返回结果响应结果
-        log.info("ProviderDubboFilter拦截invoke...end");
+        log.info("ConsumerDubboFilter拦截invoke...end");
         return result;
     }
 
@@ -52,6 +49,9 @@ public class ProviderDubboFilter implements Filter {
         Object[] paramArr = invocation.getArguments();
         if(paramArr != null && paramArr.length > 0) {
             for (int i = 0; i < paramArr.length ; i++) {
+                //if(paramArr[i] == null) {
+                //    continue;
+                //}
                 if(paramArr[i] instanceof String) { //字符串
                     invokeStatement.append("\""+paramArr[i]+"\"");
                 }else if(paramArr[i] instanceof Number){ //数值

@@ -22,5 +22,6 @@ dubbo:
   consumer:
     check: false
     timeout: 60000
+    filter: consumerDubboFilter  #配置dubbo filter(拦截dubbo消费者),必须和com.alibaba.dubbo.rpc.Filter文件中的值项的key保持一致
   provider:
-    filter: providerDubboFilter  #配置dubbo filter,必须和com.alibaba.dubbo.rpc.Filter中的value值保持一致
+    filter: providerDubboFilter  #配置dubbo filter(拦截dubbo服务提供者),必须和com.alibaba.dubbo.rpc.Filter文件中的值项的key保持一致
