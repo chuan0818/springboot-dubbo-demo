@@ -13,7 +13,14 @@ dubbo:
     name: dubbo
     port: 20880
   registry:
+    protocol: zookeeper
     address: zookeeper://127.0.0.1:2181
     id: dubbo-demo-provider-registry
+    check: false
+    timeout: 60000
+  #dubbo服务消费启动时不用check(即要求有提供者才能正确启动)  如此才能设置dubbo服务既是dubbo提供者也能是dubbo消费者
+  consumer:
+    check: false
+    timeout: 60000
   scan:
     base-packages: com.imooc.springboot.dubbo.demo.provider

@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
+//Dubbo服务提供者必须有的注解
 @EnableDubbo
 public class MainProvider {
 

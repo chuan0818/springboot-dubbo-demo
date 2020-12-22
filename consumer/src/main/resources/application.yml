@@ -11,3 +11,7 @@ dubbo:
     registry:
         address: zookeeper://127.0.0.1:2181
         id: mmc-dubbo-provider-registry
+    #dubbo服务消费启动时不用check(即不要求有提供者才能正确启动)  如此设置才能先dubbo服务提供者启动dubbo消费者,后续还能正常消费dubbo提供者的服务，否则无法消费到
+    consumer:
+        check: false
+        timeout: 60000
