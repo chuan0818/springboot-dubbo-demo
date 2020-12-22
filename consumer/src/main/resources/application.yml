@@ -1,0 +1,13 @@
+# ====================consumer====================
+server:
+  port: 8100
+spring:
+  application:
+    name: mmc-dubbo-provider
+dubbo:
+    application:
+        id: mmc-dubbo-provider
+        name: mmc-dubbo-provider
+    registry:
+        address: zookeeper://127.0.0.1:2181
+        id: mmc-dubbo-provider-registry

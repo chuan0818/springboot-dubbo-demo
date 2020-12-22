@@ -1,0 +1,79 @@
+﻿target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+
+###################额外添加#################################
+#maven项目配置
+
+#忽略对应文件
+#.calsspath --会忽略.classpath文件(包括子文件夹中的.classpath文件)
+#/.calsspath --只忽略.ignore目录下(即根目录下)的.classpath文件
+.classpath
+.project
+
+#忽略文件夹 
+# target/   --会忽略target文件夹(包括子文件夹中的target文件夹)
+# /target/  --只忽略.ignore目录下(即根目录下)的target文件夹
+target/
+.git/
+.settings/
+.externalToolBuilders/
+build/
+bin/
+.svn/
+
+#忽略classes文件夹
+classes
+
+#忽略LuenceData文件夹--luence测试文件目录
+luenceData/
+
+#**********************************************************************
+#/hello/
+#!/hello/   --! git过滤规则--指定忽略文件中某些文件不忽略
+#helloworld.txt
+#!helloworld.txt
+
+
+#注意：
+#先找原因，因为.gitignore只能忽略那些原来没有被track的文件，
+#如果某些文件已经纳入版本管理中，则修改.gitignore不会生效。
+#解决办法就是先把本地缓存删除（改成未track状态），然后再提交”：
+
+#git (重要:)!过滤规则不起作用的解决办法
+#--解决办法就是先把本地缓存删除（改成未track状态），然后再提交”
+#git rm -r --cached .
+#git add .
+#git commit -m "update .gitignore"
+
+
+#注意：已被git跟踪的文件(或文件夹),再添加git忽略或过滤规则不起作用
+#若(git add )添加到了暂存库 --可用 git rm --cached src/helloworld.txt 从暂存库移除文件跟踪 (到工作区)
+#若(git commit )添加到了本地库 --可用 git rm --cached src/helloworld.txt 从本地库移除文件跟踪 (到工作区)
+# git rm 文件名  --删除工作区文件，(注意:)并将删除放入暂存区
+
+
+
+
