@@ -34,11 +34,20 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- dubbo 2.6.2 telnet invoke 外层参数有null会报错，直接返回null   XYY版本，故不支持外层参数为null的invoke调用-->
+        <!-- 指定dubbo版本2.6.7 已修复当arg为null的时候getClass肯定会抛出异常的问题 -->
         <dependency>
             <groupId>com.alibaba.boot</groupId>
             <artifactId>dubbo-spring-boot-starter</artifactId>
             <version>${version.starter.dubbo}</version>
         </dependency>
+
+        <!--<dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>2.6.7</version>
+        </dependency>-->
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

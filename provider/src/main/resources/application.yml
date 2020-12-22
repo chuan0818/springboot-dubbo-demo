@@ -1,6 +1,6 @@
 # ====================server====================
 server:
-  port: 8089
+  port: 8099
 spring:
   application:
     name: dubbo-demo-provider
@@ -22,5 +22,5 @@ dubbo:
   consumer:
     check: false
     timeout: 60000
-  scan:
-    base-packages: com.imooc.springboot.dubbo.demo.provider
+  provider:
+    filter: providerDubboFilter  #配置dubbo filter,必须和com.alibaba.dubbo.rpc.Filter中的value值保持一致
