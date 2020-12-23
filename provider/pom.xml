@@ -61,11 +61,11 @@
             <version>${version.fastjson}</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.imooc</groupId>
             <artifactId>dubbo-demo-api</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
 </project>

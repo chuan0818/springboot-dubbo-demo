@@ -1,7 +1,7 @@
-package com.imooc.springboot.dubbo.demo.provider;
+package com.imooc.springboot.dubbo.demo.provider.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.imooc.springboot.dubbo.demo.DemoService;
+import com.imooc.springboot.dubbo.demo.provider.service.DemoService;
 
 @Service
 public class DemoServiceImpl implements DemoService {
