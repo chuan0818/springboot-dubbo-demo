@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * http://127.0.0.1:8099/sayHello?name=xxxx
@@ -45,6 +43,9 @@ public class DemoConsumerController {
         addressList.add("addr3");
         personDto.setBirthDate(new Date());
         personDto.setBirthDate(null);
+        Map paramMap01 = new HashMap<String, Object>();
+        paramMap01.put("key1", "value1");
+        personDto.setParamMap(paramMap01);
         personDto.setAddressList(addressList);
 
         OtherDto otherDto = new OtherDto();
@@ -53,9 +54,18 @@ public class DemoConsumerController {
         otherDto.setLongNum(1000L);
         otherDto.setBirthday(new Date());
         otherDto.setXxxList(new ArrayList<String>(){{add("xxx01"); add("xxx02");}});
+        personDto.setOtherDto(otherDto);
         Date now = new Date();
         now = null;
-        return demo01Service.doSomeThing(null, personDto, otherDto, 10, new BigDecimal("818.0704"), null);
+
+        List<String> paramList = new ArrayList<String>();
+        paramList.add("aaa");
+        paramList.add("bbb");
+
+        Map paramMap = new HashMap<String, Object>();
+        paramMap.put("key", "value");
+        return demo01Service.doSomeThing("zzc desc", personDto, otherDto, 10,
+                new BigDecimal("818.0704"), new Date(), paramList, paramMap);
     }
 
 }

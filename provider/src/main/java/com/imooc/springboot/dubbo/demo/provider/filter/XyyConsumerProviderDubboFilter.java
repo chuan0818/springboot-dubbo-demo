@@ -6,7 +6,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+
 import static com.alibaba.dubbo.common.Constants.CONSUMER;
 import static com.alibaba.dubbo.common.Constants.PROVIDER;
 
@@ -28,7 +33,7 @@ public class XyyConsumerProviderDubboFilter implements Filter {
         return result;
     }
 
-    private String buildInvokeStatement(Invoker<?> invoker, Invocation invocation) {
+    public static String buildInvokeStatement(Invoker<?> invoker, Invocation invocation) {
         String finalInvokeStatement = "";
         try{
             finalInvokeStatement = "invoke " + invocation.getInvoker().getInterface().getName() + "."+invocation.getMethodName();
@@ -44,10 +49,15 @@ public class XyyConsumerProviderDubboFilter implements Filter {
                     }else if(paramArr[i] instanceof Date){ //日期类型
                         //invokeStatement.append("\""+paramArr[i]+"\""); //"Tue Dec 22 22:43:19 CST 2020"解析成这样报错
                         invokeStatement.append(((Date)paramArr[i]).getTime()); //解析成时间戳(验证通过)-(参考json序列化)
-                    }else if(paramArr[i] instanceof Object) { //对象类型
-                        JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(paramArr[i]));
-                        jsonObject.put("class", paramArr[i].getClass());
-                        invokeStatement.append(jsonObject.toString());
+                    } else if(paramArr[i] instanceof Object) { //对象类型
+                        String paramStr = JSON.toJSONString(paramArr[i]);
+                        if(!StringUtils.isEmpty(paramStr) && paramStr.startsWith("{")) {
+                            JSONObject jsonObject = JSON.parseObject(paramStr);
+                            jsonObject.put("class", paramArr[i].getClass());
+                            invokeStatement.append(jsonObject.toString());
+                        }else{ //兼容最外层列表或者数组参数
+                            invokeStatement.append(paramStr);
+                        }
                     }else{ //最外参数且是null(参考json序列化)
                         //log.info("not match type String/Number/Object(处理最外层值为null的参数为null):" + paramArr[i]);
                         invokeStatement.append(paramArr[i]);

@@ -23,6 +23,8 @@ import static com.alibaba.dubbo.common.Constants.PROVIDER;
  * //Could not resolve placeholder 'xxx' in value "${aaa.bbb.ccc}" 所以我们可以采用赋默认值的方式来防止这个错误
  * //@Value("${aaa.bbb.ccc:DefaultValue}") dubbo Filter无法注入@Value
  * 参考:https://blog.csdn.net/wuge507639721/article/details/82191365
+ * 已验证最外层对象参数需要加class字段属性,对象参数内部的对象属性不用加class字段属性。如:PersonDto.otherDto(内部otherDto不需要class字段属性)
+ * 加class属性可以通过paramStr.startsWith("{")判断【包括了对象和map】
  */
 @Slf4j
 @Activate(group = {CONSUMER, PROVIDER})
@@ -36,7 +38,7 @@ public class XyyConsumerProviderDubboFilterCopy implements Filter {
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        String InvokeStatement = buildInvokeStatement(invoker, invocation);
+        String InvokeStatement = XyyConsumerProviderDubboFilter.buildInvokeStatement(invoker, invocation);
         long startTime = System.currentTimeMillis();
         Result result = invoker.invoke(invocation);
         long elapsed = System.currentTimeMillis() - startTime;
@@ -65,41 +67,6 @@ public class XyyConsumerProviderDubboFilterCopy implements Filter {
         return result;
     }
 
-    private String buildInvokeStatement(Invoker<?> invoker, Invocation invocation) {
-        String finalInvokeStatement = "";
-        try{
-            finalInvokeStatement = "invoke " + invocation.getInvoker().getInterface().getName() + "."+invocation.getMethodName();
-            StringBuilder invokeStatement = new StringBuilder(finalInvokeStatement);
-            invokeStatement.append("(");
-            Object[] paramArr = invocation.getArguments();
-            if(paramArr != null && paramArr.length > 0) {
-                for (int i = 0; i < paramArr.length ; i++) {
-                    if(paramArr[i] instanceof String) { //字符串
-                        invokeStatement.append("\""+paramArr[i]+"\"");
-                    }else if(paramArr[i] instanceof Number){ //数值
-                        invokeStatement.append(paramArr[i]);
-                    }else if(paramArr[i] instanceof Date){ //日期类型
-                        //invokeStatement.append("\""+paramArr[i]+"\""); //"Tue Dec 22 22:43:19 CST 2020"解析成这样报错
-                        invokeStatement.append(((Date)paramArr[i]).getTime()); //解析成时间戳(验证通过)-(参考json序列化)
-                    }else if(paramArr[i] instanceof Object) { //对象类型
-                        JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(paramArr[i]));
-                        jsonObject.put("class", paramArr[i].getClass());
-                        invokeStatement.append(jsonObject.toString());
-                    }else{ //最外参数且是null(参考json序列化)
-                        //log.info("not match type String/Number/Object(处理最外层值为null的参数为null):" + paramArr[i]);
-                        invokeStatement.append(paramArr[i]);
-                    }
-                    if(i != paramArr.length-1){
-                        invokeStatement.append(",");
-                    }
-                }
-            }
-            invokeStatement.append(")");
-            finalInvokeStatement =  invokeStatement.toString();
-        }catch (Exception e) {
-            log.info("buildInvokeStatement error:" + finalInvokeStatement);
-        }
-        return finalInvokeStatement;
-    }
+
 }
 

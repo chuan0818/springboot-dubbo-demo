@@ -42,7 +42,7 @@ public class ProviderDubboFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         log.info("ProviderDubboFilter拦截invoke...start");
-        buildInvokeStatement(invoker, invocation);
+        String invokeStatement = XyyConsumerProviderDubboFilter.buildInvokeStatement(invoker, invocation);
         //log.info("InterfaceName={},MethodName={},Parameter={}", invocation.getInvoker().getInterface().getName(), invocation.getMethodName(), invocation.getArguments());
         //开始时间
         long startTime = System.currentTimeMillis();
@@ -57,40 +57,16 @@ public class ProviderDubboFilter implements Filter {
         //    log.info("InterfaceName={},MethodName={},Resposne={},SpendTime={} ms", invocation.getInvoker().getInterface().getName(), invocation.getMethodName(), JSON.toJSONString(new Object[]{result.getValue()}), elapsed);
         //}
         //返回结果响应结果
+        String dubboPort = "";
+        if(invoker.getUrl() != null) {
+            dubboPort = String.valueOf(invoker.getUrl().getPort());
+        }
+        log.info("SpendTime={}ms,port={},{}", elapsed, dubboPort, invokeStatement);
         log.info("ProviderDubboFilter拦截invoke...end");
         return result;
     }
 
-    private String buildInvokeStatement(Invoker<?> invoker, Invocation invocation) {
-        StringBuilder invokeStatement = new StringBuilder("invoke " + invocation.getInvoker().getInterface().getName() + "."+invocation.getMethodName());
-        invokeStatement.append("(");
-        Object[] paramArr = invocation.getArguments();
-        if(paramArr != null && paramArr.length > 0) {
-            for (int i = 0; i < paramArr.length ; i++) {
-                if(paramArr[i] instanceof String) { //字符串
-                    invokeStatement.append("\""+paramArr[i]+"\"");
-                }else if(paramArr[i] instanceof Number){ //数值
-                    invokeStatement.append(paramArr[i]);
-                }else if(paramArr[i] instanceof Date){ //日期类型
-                    //invokeStatement.append("\""+paramArr[i]+"\""); //"Tue Dec 22 22:43:19 CST 2020"解析成这样报错
-                    invokeStatement.append(((Date)paramArr[i]).getTime()); //解析成时间戳(验证通过)-(参考json序列化)
-                }else if(paramArr[i] instanceof Object) { //对象类型
-                    JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(paramArr[i]));
-                    jsonObject.put("class", paramArr[i].getClass());
-                    invokeStatement.append(jsonObject.toString());
-                }else{ //最外参数且是null(参考json序列化)
-                    log.info("not match type String/Number/Object(处理最外层值为null的参数为null):" + paramArr[i]);
-                    invokeStatement.append(paramArr[i]);
-                }
-                if(i != paramArr.length-1){
-                    invokeStatement.append(",");
-                }
-            }
-        }
-        invokeStatement.append(")");
-        log.info(invokeStatement.toString());
-        return invokeStatement.toString();
-    }
+
 }
 
 

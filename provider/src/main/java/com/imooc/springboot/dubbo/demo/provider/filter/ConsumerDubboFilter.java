@@ -29,7 +29,7 @@ public class ConsumerDubboFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         log.info("ConsumerDubboFilter拦截invoke...start");
-        buildInvokeStatement(invoker, invocation);
+        String invokeStatement = XyyConsumerProviderDubboFilter.buildInvokeStatement(invoker, invocation);
         //log.info("InterfaceName={},MethodName={},Parameter={}", invocation.getInvoker().getInterface().getName(), invocation.getMethodName(), invocation.getArguments());
         //开始时间
         long startTime = System.currentTimeMillis();
@@ -44,6 +44,11 @@ public class ConsumerDubboFilter implements Filter {
         //    log.info("InterfaceName={},MethodName={},Resposne={},SpendTime={} ms", invocation.getInvoker().getInterface().getName(), invocation.getMethodName(), JSON.toJSONString(new Object[]{result.getValue()}), elapsed);
         //}
         //返回结果响应结果
+        String dubboPort = "";
+        if(invoker.getUrl() != null) {
+            dubboPort = String.valueOf(invoker.getUrl().getPort());
+        }
+        log.info("SpendTime={}ms,port={},{}", elapsed, dubboPort, invokeStatement);
         log.info("ConsumerDubboFilter拦截invoke...end");
         return result;
     }
