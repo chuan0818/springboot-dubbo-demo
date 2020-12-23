@@ -1,5 +1,7 @@
 package com.imooc.springboot.dubbo.demo.provider.filter;
 
+import com.alibaba.dubbo.common.extension.Activate;
+import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.dubbo.rpc.*;
 import com.alibaba.dubbo.rpc.service.GenericService;
 import com.alibaba.fastjson.JSON;
@@ -9,6 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+
+import static com.alibaba.dubbo.common.Constants.CACHE_KEY;
+import static com.alibaba.dubbo.common.Constants.CONSUMER;
+import static com.alibaba.dubbo.common.Constants.PROVIDER;
 
 /**
  * 拦截打印dubbo请求参数
@@ -23,6 +29,15 @@ import java.util.List;
  * PS:外层null值参数会处理成null,json对象中值为null字段会被dubbo序列化时自动剔除
  */
 @Slf4j
+/**
+ * org.apache.dubbo.Filter扩展点激活 CONSUMER消费者, PROVIDER提供者 已验证可替代
+ * @Activate(group = {CONSUMER, PROVIDER}) 替代yml中dubbo Filter配置
+ * consumer:
+ *     filter: consumerDubboFilter  #配置dubbo filter(拦截dubbo消费者),必须和com.alibaba.dubbo.rpc.Filter文件中的值项的key保持一致
+ * provider:
+ *   filter: providerDubboFilter
+ */
+//@Activate(group = {PROVIDER})
 public class ProviderDubboFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {

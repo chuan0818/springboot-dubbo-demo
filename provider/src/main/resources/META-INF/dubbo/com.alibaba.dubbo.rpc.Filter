@@ -1,2 +1,3 @@
 providerDubboFilter=com.imooc.springboot.dubbo.demo.provider.filter.ProviderDubboFilter
 consumerDubboFilter=com.imooc.springboot.dubbo.demo.provider.filter.ConsumerDubboFilter
+xyyConsumerProviderDubboFilter=com.imooc.springboot.dubbo.demo.provider.filter.XyyConsumerProviderDubboFilter

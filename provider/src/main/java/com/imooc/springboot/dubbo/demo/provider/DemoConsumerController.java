@@ -1,10 +1,10 @@
 package com.imooc.springboot.dubbo.demo.provider;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.imooc.springboot.dubbo.demo.DemoService;
 import com.imooc.springboot.dubbo.demo.provider.dto.OtherDto;
 import com.imooc.springboot.dubbo.demo.provider.dto.PersonDto;
 import com.imooc.springboot.dubbo.demo.provider.service.Demo01Service;
+import com.imooc.springboot.dubbo.demo.provider.service.DemoService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,11 +1,15 @@
 package com.imooc.springboot.dubbo.demo.provider.filter;
 
+import com.alibaba.dubbo.common.extension.Activate;
 import com.alibaba.dubbo.rpc.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
+
+import static com.alibaba.dubbo.common.Constants.CONSUMER;
+import static com.alibaba.dubbo.common.Constants.PROVIDER;
 
 /**
  * 拦截打印dubbo请求参数
@@ -20,6 +24,7 @@ import java.util.Date;
  * PS:外层null值参数会处理成null,json对象中值为null字段会被dubbo序列化时自动剔除
  */
 @Slf4j
+//@Activate(group = {CONSUMER})
 public class ConsumerDubboFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {

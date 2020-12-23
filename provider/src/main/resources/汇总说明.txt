@@ -1,10 +1,11 @@
 ##################已成功拦截dubbo请求###########################################
+PS:如果一直yml报错，请先clean 再 install
 1.Dubbo拦截器实现的原理，我的理解就是实现或扩展Dubbo自己的Filter接口（LogFilter implements Filter），
     public class ProviderDubboFilter implements Filter
 2.然后将这个类在配置文件（META-INF/dubbo/com.alibaba.dubbo.rpc.Filter文本文件）中与一个名称对应（logFilter），
     META-INF/dubbo/com.alibaba.dubbo.rpc.Filter
     providerDubboFilter=com.imooc.springboot.dubbo.demo.provider.filter.ProviderDubboFilter
-    PS:providerDubboFilter这个key需要在dubbo配置文件中配置
+    PS:providerDubboFilter这个key需要在dubbo配置文件中配置 已验证(无论注解还是yml配置都需要在这里配置)
 3.然后在dubbo配置文件中对需要增加拦截器的bean进行配置
     consumer:
       check: false  #dubbo服务消费启动时不用check(即要求有提供者才能正确启动)  如此才能设置dubbo服务既是dubbo提供者也能是dubbo消费者
@@ -12,6 +13,15 @@
       filter: consumerDubboFilter  #配置dubbo filter(拦截dubbo消费者),必须和com.alibaba.dubbo.rpc.Filter文件中的值项的key保持一致
     provider:
       filter: providerDubboFilter  #配置dubbo filter(拦截dubbo服务提供者),必须和com.alibaba.dubbo.rpc.Filter文件中的值项的key保持一致
+    /**
+     * org.apache.dubbo.Filter扩展点激活 CONSUMER消费者, PROVIDER提供者 已验证可替代
+     * @Activate(group = {CONSUMER, PROVIDER}) 替代yml中dubbo Filter配置
+     * consumer:
+     *     filter: consumerDubboFilter  #配置dubbo filter(拦截dubbo消费者),必须和com.alibaba.dubbo.rpc.Filter文件中的值项的key保持一致
+     * provider:
+     *   filter: providerDubboFilter
+     */
+
 #####################dubbo请求过程################################################
     消费者发起dubbo请求流程:(拦截消费者发起dubbo请求start->拦截请求到的服务者start->执行真正的dubbo服务逻辑->拦截请求到的服务者end->拦截消费者发起dubbo请求end)
     可以拦截dubbo客户端也可以拦截dubbo服务端
