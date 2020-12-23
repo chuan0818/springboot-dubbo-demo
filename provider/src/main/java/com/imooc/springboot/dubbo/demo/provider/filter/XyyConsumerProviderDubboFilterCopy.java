@@ -1,11 +1,14 @@
 package com.imooc.springboot.dubbo.demo.provider.filter;
 
 import com.alibaba.dubbo.common.extension.Activate;
+import com.alibaba.dubbo.config.spring.ServiceBean;
 import com.alibaba.dubbo.rpc.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.imooc.springboot.dubbo.demo.provider.config.CommonConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -36,8 +39,23 @@ public class XyyConsumerProviderDubboFilterCopy implements Filter {
     //@Value("${xyydubbo.skipInvokeMethodStr:}")
     //private String skipInvokeMethodStr=null;
 
+    //方式1:这种方式，配合setter/getter可以直接实现依赖注入 (已验证-可行)
+    //方式2:dubbo Filter内部拿到ApplicationContext (已验证-可行)
+    private CommonConfig commonConfig;
+    public CommonConfig getCommonConfig() {
+        return commonConfig;
+    }
+    public void setCommonConfig(CommonConfig commonConfig) {
+        this.commonConfig = commonConfig;
+    }
+
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
+        ApplicationContext context= ServiceBean.getSpringContext();
+        if(context != null) {
+            commonConfig = context.getBean(CommonConfig.class);
+        }
+
         String InvokeStatement = XyyConsumerProviderDubboFilter.buildInvokeStatement(invoker, invocation);
         long startTime = System.currentTimeMillis();
         Result result = invoker.invoke(invocation);

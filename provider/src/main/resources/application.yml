@@ -28,4 +28,4 @@ dubbo:
 
 #全局变量参数
 xyydubbo:
-  filterContainInvokeMethodStr: doSomeThing
+  filterContainInvokeMethodStr: doSomeThing,hello
